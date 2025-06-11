@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>老陈资源站 - 功能演示</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --apple-blue: #007AFF;
+            --apple-gray: #F2F2F7;
+            --apple-dark-gray: #8E8E93;
+            --apple-light-gray: #F9F9F9;
+            --apple-border: #E5E5EA;
+            --apple-shadow: rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: #1d1d1f;
+        }
+        
+        .hero-section {
+            padding: 80px 0;
+            text-align: center;
+            color: white;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid var(--apple-border);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, var(--apple-blue), #5856D6);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 24px;
+        }
+        
+        .screenshot {
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border: 1px solid var(--apple-border);
+            background: white;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        
+        .mock-browser {
+            border: 1px solid var(--apple-border);
+            border-radius: 10px;
+            overflow: hidden;
+            background: white;
+        }
+        
+        .mock-browser-header {
+            background: var(--apple-gray);
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--apple-border);
+            display: flex;
+            align-items: center;
+        }
+        
+        .mock-browser-dots {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .mock-browser-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .dot-red { background: #FF5F57; }
+        .dot-yellow { background: #FFBD2E; }
+        .dot-green { background: #28CA42; }
+        
+        .mock-browser-url {
+            background: white;
+            border: 1px solid var(--apple-border);
+            border-radius: 5px;
+            padding: 5px 10px;
+            margin-left: 15px;
+            flex: 1;
+            font-size: 12px;
+            color: var(--apple-dark-gray);
+        }
+        
+        .mock-content {
+            padding: 20px;
+            min-height: 300px;
+        }
+        
+        .mock-navbar {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--apple-border);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .mock-file-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            background: var(--apple-light-gray);
+        }
+        
+        .mock-file-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            color: var(--apple-blue);
+        }
+        
+        .btn-demo {
+            background: var(--apple-blue);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            padding: 12px 30px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-demo:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 122, 255, 0.3);
+            color: white;
+        }
+        
+        .btn-outline-demo {
+            border: 2px solid white;
+            color: white;
+            background: transparent;
+            border-radius: 25px;
+            padding: 10px 25px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-demo:hover {
+            background: white;
+            color: var(--apple-blue);
+        }
+        
+        .tech-stack {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 50px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .tech-item {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .tech-logo {
+            width: 60px;
+            height: 60px;
+            background: var(--apple-gray);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 24px;
+            color: var(--apple-blue);
+        }
+        
+        .footer-demo {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            margin-top: 80px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 英雄区域 -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="hero-title">
+                <i class="bi bi-folder2-open me-3"></i>
+                老陈资源站
+            </h1>
+            <p class="hero-subtitle">Apple风格资源管理器 - 优雅、简洁、高效</p>
+            <div class="mt-4">
+                <a href="index.html" class="btn-demo me-3">
+                    <i class="bi bi-play-fill me-2"></i>
+                    立即体验
+                </a>
+                <a href="install.php" class="btn-outline-demo">
+                    <i class="bi bi-download me-2"></i>
+                    开始安装
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 功能特性 -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-palette"></i>
+                        </div>
+                        <h4>Apple风格设计</h4>
+                        <p class="text-muted">模仿macOS Finder的设计风格，提供现代化、简洁的用户界面，支持响应式布局。</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-folder-fill"></i>
+                        </div>
+                        <h4>层级文件管理</h4>
+                        <p class="text-muted">支持无限层级的文件夹结构，右键菜单操作，面包屑导航，让文件管理更加直观。</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <h4>权限控制</h4>
+                        <p class="text-muted">双重模式设计，访客只能浏览，管理员可以进行完整的文件管理操作。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-link-45deg"></i>
+                        </div>
+                        <h4>链接管理</h4>
+                        <p class="text-muted">每个文件可以设置下载链接和教程链接，方便用户快速获取资源和学习材料。</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-search"></i>
+                        </div>
+                        <h4>实时搜索</h4>
+                        <p class="text-muted">支持实时搜索文件和文件夹名称，快速定位所需资源。</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-lightning-fill"></i>
+                        </div>
+                        <h4>快速部署</h4>
+                        <p class="text-muted">提供一键安装脚本，支持快速部署到任何支持PHP和MySQL的服务器环境。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 界面预览 -->
+    <section class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="text-white mb-3">界面预览</h2>
+                <p class="text-white opacity-75">体验Apple风格的优雅设计</p>
+            </div>
+            
+            <div class="screenshot">
+                <div class="mock-browser">
+                    <div class="mock-browser-header">
+                        <div class="mock-browser-dots">
+                            <div class="mock-browser-dot dot-red"></div>
+                            <div class="mock-browser-dot dot-yellow"></div>
+                            <div class="mock-browser-dot dot-green"></div>
+                        </div>
+                        <div class="mock-browser-url">https://your-domain.com/老陈资源站</div>
+                    </div>
+                    <div class="mock-content">
+                        <div class="mock-navbar">
+                            <div>
+                                <i class="bi bi-folder2-open me-2"></i>
+                                <strong>老陈资源站</strong>
+                            </div>
+                            <div>
+                                <span class="badge bg-primary me-2">管理员模式</span>
+                                <button class="btn btn-sm btn-outline-secondary">退出登录</button>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mock-file-item">
+                                    <i class="bi bi-folder-fill mock-file-icon"></i>
+                                    <span>软件工具</span>
+                                </div>
+                                <div class="mock-file-item">
+                                    <i class="bi bi-folder-fill mock-file-icon"></i>
+                                    <span>学习资料</span>
+                                </div>
+                                <div class="mock-file-item">
+                                    <i class="bi bi-folder-fill mock-file-icon"></i>
+                                    <span>游戏资源</span>
+                                </div>
+                                <div class="mock-file-item">
+                                    <i class="bi bi-file-earmark mock-file-icon" style="color: #8E8E93;"></i>
+                                    <span>Visual Studio Code</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center text-muted">
+                                    <i class="bi bi-mouse2 mb-2" style="font-size: 2rem;"></i>
+                                    <p>右键菜单操作</p>
+                                    <small>新建 • 重命名 • 删除</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 技术栈 -->
+    <section class="py-5">
+        <div class="container">
+            <div class="tech-stack">
+                <div class="text-center mb-4">
+                    <h3>技术栈</h3>
+                    <p class="text-muted">基于现代Web技术构建</p>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-3 col-6">
+                        <div class="tech-item">
+                            <div class="tech-logo">
+                                <i class="bi bi-bootstrap"></i>
+                            </div>
+                            <h6>Bootstrap 5</h6>
+                            <small class="text-muted">响应式UI框架</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="tech-item">
+                            <div class="tech-logo">
+                                <i class="bi bi-filetype-js"></i>
+                            </div>
+                            <h6>JavaScript</h6>
+                            <small class="text-muted">原生JS交互</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="tech-item">
+                            <div class="tech-logo">
+                                <i class="bi bi-filetype-php"></i>
+                            </div>
+                            <h6>PHP</h6>
+                            <small class="text-muted">后端API服务</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="tech-item">
+                            <div class="tech-logo">
+                                <i class="bi bi-database"></i>
+                            </div>
+                            <h6>MySQL</h6>
+                            <small class="text-muted">数据存储</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 使用流程 -->
+    <section class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="text-white mb-3">使用流程</h2>
+                <p class="text-white opacity-75">简单三步，快速上手</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon">
+                            <span class="fw-bold">1</span>
+                        </div>
+                        <h5>安装部署</h5>
+                        <p class="text-muted">运行install.php安装脚本，配置数据库和管理员账号</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon">
+                            <span class="fw-bold">2</span>
+                        </div>
+                        <h5>管理资源</h5>
+                        <p class="text-muted">登录管理员账号，创建文件夹和文件，设置下载链接</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon">
+                            <span class="fw-bold">3</span>
+                        </div>
+                        <h5>分享访问</h5>
+                        <p class="text-muted">用户可以直接访问网站，浏览和下载资源</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer-demo">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-md-start text-center">
+                    <h5><i class="bi bi-folder2-open me-2"></i>老陈资源站</h5>
+                    <p class="opacity-75">Apple风格资源管理器</p>
+                </div>
+                <div class="col-md-6 text-md-end text-center">
+                    <div class="mb-3">
+                        <a href="index.html" class="text-white text-decoration-none me-3">
+                            <i class="bi bi-house me-1"></i>首页
+                        </a>
+                        <a href="install.php" class="text-white text-decoration-none me-3">
+                            <i class="bi bi-download me-1"></i>安装
+                        </a>
+                        <a href="README.md" class="text-white text-decoration-none" target="_blank">
+                            <i class="bi bi-book me-1"></i>文档
+                        </a>
+                    </div>
+                    <p class="opacity-75 mb-0">
+                        网站由<a href="https://hydun.com" target="_blank" class="text-white">火毅盾云安全</a>提供防护及CDN加速服务
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

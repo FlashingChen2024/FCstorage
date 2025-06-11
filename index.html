@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>老陈资源站 - Apple风格资源管理器</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --apple-blue: #007AFF;
+            --apple-gray: #F2F2F7;
+            --apple-dark-gray: #8E8E93;
+            --apple-light-gray: #F9F9F9;
+            --apple-border: #E5E5EA;
+            --apple-shadow: rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            background-color: var(--apple-light-gray);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: #1d1d1f;
+        }
+        
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--apple-border);
+            box-shadow: 0 1px 3px var(--apple-shadow);
+        }
+        
+        .navbar-brand {
+            font-weight: 600;
+            color: #1d1d1f !important;
+        }
+        
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .breadcrumb-container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px var(--apple-shadow);
+            border: 1px solid var(--apple-border);
+        }
+        
+        .breadcrumb {
+            margin: 0;
+            background: none;
+            padding: 0;
+        }
+        
+        .breadcrumb-item a {
+            color: var(--apple-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .breadcrumb-item a:hover {
+            text-decoration: underline;
+        }
+        
+        .toolbar {
+            background-color: white;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px var(--apple-shadow);
+            border: 1px solid var(--apple-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .search-box {
+            position: relative;
+            max-width: 300px;
+            flex: 1;
+        }
+        
+        .search-box input {
+            border-radius: 20px;
+            border: 1px solid var(--apple-border);
+            padding: 8px 40px 8px 15px;
+            background-color: var(--apple-gray);
+            width: 100%;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--apple-blue);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+        
+        .search-box i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--apple-dark-gray);
+        }
+        
+        .btn-apple {
+            background-color: var(--apple-blue);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            padding: 8px 16px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-apple:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+        }
+        
+        .file-grid {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px var(--apple-shadow);
+            border: 1px solid var(--apple-border);
+            min-height: 400px;
+        }
+        
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        
+        .file-item:hover {
+            background-color: var(--apple-gray);
+        }
+        
+        .file-item.selected {
+            background-color: var(--apple-blue);
+            color: white;
+        }
+        
+        .file-icon {
+            width: 32px;
+            height: 32px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .folder-icon {
+            color: #007AFF;
+        }
+        
+        .file-icon-default {
+            color: #8E8E93;
+        }
+        
+        .file-name {
+            flex: 1;
+            font-weight: 500;
+        }
+        
+        .file-meta {
+            font-size: 12px;
+            color: var(--apple-dark-gray);
+            margin-left: auto;
+        }
+        
+        .context-menu {
+            position: fixed;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--apple-border);
+            padding: 5px 0;
+            z-index: 1000;
+            display: none;
+            min-width: 150px;
+        }
+        
+        .context-menu-item {
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+        }
+        
+        .context-menu-item:hover {
+            background-color: var(--apple-gray);
+        }
+        
+        .context-menu-item i {
+            margin-right: 8px;
+            width: 16px;
+        }
+        
+        .modal-content {
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-header {
+            border-bottom: 1px solid var(--apple-border);
+            padding: 20px;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .modal-footer {
+            border-top: 1px solid var(--apple-border);
+            padding: 15px 20px;
+        }
+        
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid var(--apple-border);
+            padding: 10px 15px;
+        }
+        
+        .form-control:focus {
+            border-color: var(--apple-blue);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--apple-dark-gray);
+            font-size: 14px;
+        }
+        
+        .footer a {
+            color: var(--apple-blue);
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--apple-dark-gray);
+        }
+        
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--apple-dark-gray);
+        }
+        
+        .admin-badge {
+            background-color: var(--apple-blue);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-folder2-open me-2"></i>
+                老陈资源站
+            </a>
+            <div class="navbar-nav ms-auto">
+                <div id="adminStatus" class="nav-item" style="display: none;">
+                    <span class="admin-badge me-3">管理员模式</span>
+                </div>
+                <button id="loginBtn" class="btn btn-apple btn-sm" onclick="showLoginModal()">
+                    <i class="bi bi-person-circle me-1"></i>
+                    管理员登录
+                </button>
+                <button id="logoutBtn" class="btn btn-outline-secondary btn-sm" onclick="logout()" style="display: none;">
+                    <i class="bi bi-box-arrow-right me-1"></i>
+                    退出登录
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主容器 -->
+    <div class="main-container">
+        <!-- 面包屑导航 -->
+        <div class="breadcrumb-container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" id="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#" onclick="navigateToFolder(null)">根目录</a></li>
+                </ol>
+            </nav>
+        </div>
+
+        <!-- 工具栏 -->
+        <div class="toolbar">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜索文件或文件夹..." onkeyup="searchItems()">
+                <i class="bi bi-search"></i>
+            </div>
+            <div id="adminTools" style="display: none;">
+                <button class="btn btn-apple btn-sm me-2" onclick="showCreateModal('folder')">
+                    <i class="bi bi-folder-plus me-1"></i>
+                    新建文件夹
+                </button>
+                <button class="btn btn-apple btn-sm" onclick="showCreateModal('file')">
+                    <i class="bi bi-file-plus me-1"></i>
+                    新建文件
+                </button>
+            </div>
+        </div>
+
+        <!-- 文件列表 -->
+        <div class="file-grid">
+            <div id="fileList" class="loading">
+                <i class="bi bi-arrow-clockwise"></i>
+                <div>正在加载...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <div class="footer">
+        网站由<a href="https://hydun.com" target="_blank">火毅盾云安全</a>提供防护及CDN加速服务
+    </div>
+
+    <!-- 右键菜单 -->
+    <div id="contextMenu" class="context-menu">
+        <div class="context-menu-item" onclick="showCreateModal('folder')">
+            <i class="bi bi-folder-plus"></i>
+            新建文件夹
+        </div>
+        <div class="context-menu-item" onclick="showCreateModal('file')">
+            <i class="bi bi-file-plus"></i>
+            新建文件
+        </div>
+        <div class="context-menu-item" id="renameItem" onclick="showRenameModal()">
+            <i class="bi bi-pencil"></i>
+            重命名
+        </div>
+        <div class="context-menu-item" id="deleteItem" onclick="deleteItem()">
+            <i class="bi bi-trash"></i>
+            删除
+        </div>
+    </div>
+
+    <!-- 登录模态框 -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">管理员登录</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">用户名</label>
+                            <input type="text" class="form-control" id="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">密码</label>
+                            <input type="password" class="form-control" id="password" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-apple" onclick="login()">登录</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 创建/编辑模态框 -->
+    <div class="modal fade" id="createModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createModalTitle">新建项目</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createForm">
+                        <div class="mb-3">
+                            <label for="itemName" class="form-label">名称</label>
+                            <input type="text" class="form-control" id="itemName" required>
+                        </div>
+                        <div id="fileFields" style="display: none;">
+                            <div class="mb-3">
+                                <label for="downloadLink" class="form-label">下载链接</label>
+                                <input type="url" class="form-control" id="downloadLink" placeholder="https://">
+                            </div>
+                            <div class="mb-3">
+                                <label for="tutorialLink" class="form-label">教程链接</label>
+                                <input type="url" class="form-control" id="tutorialLink" placeholder="https://">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-apple" onclick="saveItem()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 重命名模态框 -->
+    <div class="modal fade" id="renameModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">重命名</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="renameForm">
+                        <div class="mb-3">
+                            <label for="newName" class="form-label">新名称</label>
+                            <input type="text" class="form-control" id="newName" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-apple" onclick="renameItem()">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 文件详情模态框 -->
+    <div class="modal fade" id="fileDetailModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fileDetailTitle">文件详情</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="fileDetailContent">
+                        <!-- 文件详情内容 -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
