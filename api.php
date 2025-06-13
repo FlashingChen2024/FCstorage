@@ -1,6 +1,62 @@
 <?php
 require_once 'config.php';
 
+// IP封禁管理
+class IPBanManager {
+    private static $banFile = 'ip_bans.json';
+    private static $maxAttempts = 5;
+    private static $banDuration = 3600; // 1小时
+    
+    public static function recordFailedAttempt($ip) {
+        $bans = self::loadBans();
+        $now = time();
+        
+        if (!isset($bans[$ip])) {
+            $bans[$ip] = ['attempts' => 0, 'last_attempt' => $now, 'banned_until' => 0];
+        }
+        
+        $bans[$ip]['attempts']++;
+        $bans[$ip]['last_attempt'] = $now;
+        
+        if ($bans[$ip]['attempts'] >= self::$maxAttempts) {
+            $bans[$ip]['banned_until'] = $now + self::$banDuration;
+        }
+        
+        self::saveBans($bans);
+    }
+    
+    public static function isBanned($ip) {
+        $bans = self::loadBans();
+        $now = time();
+        
+        if (isset($bans[$ip]) && $bans[$ip]['banned_until'] > $now) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public static function clearAttempts($ip) {
+        $bans = self::loadBans();
+        if (isset($bans[$ip])) {
+            unset($bans[$ip]);
+            self::saveBans($bans);
+        }
+    }
+    
+    private static function loadBans() {
+        if (file_exists(self::$banFile)) {
+            $content = file_get_contents(self::$banFile);
+            return json_decode($content, true) ?: [];
+        }
+        return [];
+    }
+    
+    private static function saveBans($bans) {
+        file_put_contents(self::$banFile, json_encode($bans));
+    }
+}
+
 // 设置响应头
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
@@ -66,6 +122,13 @@ function checkAdmin() {
 
 // 登录
 function login() {
+    $ip = $_SERVER['REMOTE_ADDR'] ?? $_SERVER['HTTP_X_FORWARDED_FOR'] ?? 'unknown';
+    
+    // 检查IP是否被封禁
+    if (IPBanManager::isBanned($ip)) {
+        throw new Exception('登录失败次数过多，IP已被封禁1小时');
+    }
+    
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
     
@@ -77,11 +140,16 @@ function login() {
         $_SESSION['admin_logged_in'] = true;
         $_SESSION['login_time'] = time();
         
+        // 登录成功，清除失败记录
+        IPBanManager::clearAttempts($ip);
+        
         echo json_encode([
             'success' => true,
             'message' => '登录成功'
         ]);
     } else {
+        // 记录失败尝试
+        IPBanManager::recordFailedAttempt($ip);
         throw new Exception('用户名或密码错误');
     }
 }

@@ -4,6 +4,7 @@ let isAdmin = false;
 let selectedItem = null;
 let currentItems = [];
 let breadcrumbPath = [];
+let isAdminMode = true; // 管理员模式状态
 
 // 页面加载完成后初始化
 document.addEventListener('DOMContentLoaded', function() {
@@ -60,8 +61,7 @@ function checkAdminStatus() {
     fetch('api.php?action=check_admin')
         .then(response => response.json())
         .then(data => {
-            isAdmin = data.is_admin;
-            updateAdminUI();
+            updateAdminUI(data.is_admin);
         })
         .catch(error => {
             console.error('检查管理员状态失败:', error);
@@ -69,22 +69,47 @@ function checkAdminStatus() {
 }
 
 // 更新管理员UI
-function updateAdminUI() {
+function updateAdminUI(adminStatus = false) {
     const loginBtn = document.getElementById('loginBtn');
     const logoutBtn = document.getElementById('logoutBtn');
-    const adminStatus = document.getElementById('adminStatus');
+    const adminStatusEl = document.getElementById('adminStatus');
     const adminTools = document.getElementById('adminTools');
+    const contextMenu = document.getElementById('contextMenu');
+    const createFolderBtn = document.getElementById('createFolderBtn');
+    const createFileBtn = document.getElementById('createFileBtn');
+    const toggleModeBtn = document.getElementById('toggleModeBtn');
     
-    if (isAdmin) {
+    if (adminStatus) {
         loginBtn.style.display = 'none';
         logoutBtn.style.display = 'inline-block';
-        adminStatus.style.display = 'block';
+        adminStatusEl.style.display = 'block';
         adminTools.style.display = 'block';
+        
+        // 根据当前模式显示/隐藏管理功能
+        if (isAdminMode) {
+            if (contextMenu) contextMenu.style.display = 'block';
+            if (createFolderBtn) createFolderBtn.style.display = 'inline-block';
+            if (createFileBtn) createFileBtn.style.display = 'inline-block';
+            if (toggleModeBtn) {
+                toggleModeBtn.innerHTML = '<i class="bi bi-eye me-1"></i>切换到游客模式';
+            }
+            adminStatusEl.innerHTML = '<span class="admin-badge me-3">管理员模式</span>';
+        } else {
+            if (contextMenu) contextMenu.style.display = 'none';
+            if (createFolderBtn) createFolderBtn.style.display = 'none';
+            if (createFileBtn) createFileBtn.style.display = 'none';
+            if (toggleModeBtn) {
+                toggleModeBtn.innerHTML = '<i class="bi bi-gear me-1"></i>切换到管理模式';
+            }
+            adminStatusEl.innerHTML = '<span class="admin-badge me-3" style="background-color: #6c757d;">游客模式</span>';
+        }
     } else {
         loginBtn.style.display = 'inline-block';
         logoutBtn.style.display = 'none';
-        adminStatus.style.display = 'none';
+        adminStatusEl.style.display = 'none';
         adminTools.style.display = 'none';
+        if (contextMenu) contextMenu.style.display = 'none';
+        isAdminMode = true; // 重置为管理员模式
     }
 }
 
@@ -116,8 +141,7 @@ function login() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            isAdmin = true;
-            updateAdminUI();
+            updateAdminUI(true);
             bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
             document.getElementById('loginForm').reset();
             showToast('登录成功', 'success');
@@ -133,16 +157,26 @@ function login() {
 
 // 退出登录
 function logout() {
-    fetch('api.php?action=logout')
-        .then(response => response.json())
-        .then(data => {
-            isAdmin = false;
-            updateAdminUI();
+    fetch('api.php?action=logout', {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            updateAdminUI(false);
             showToast('已退出登录', 'info');
-        })
-        .catch(error => {
-            console.error('退出登录失败:', error);
-        });
+        }
+    })
+    .catch(error => {
+        console.error('退出登录失败:', error);
+    });
+}
+
+// 切换管理员模式
+function toggleAdminMode() {
+    isAdminMode = !isAdminMode;
+    updateAdminUI(true); // 重新更新UI，传递true表示仍是管理员
+    showToast(isAdminMode ? '已切换到管理员模式' : '已切换到游客模式', 'info');
 }
 
 // 加载文件列表
@@ -436,7 +470,7 @@ function showFileDetail(id) {
     if (item.download_link) {
         html += `<div class="mb-3">
             <strong>下载链接：</strong><br>
-            <a href="${escapeHtml(item.download_link)}" target="_blank" class="btn btn-apple btn-sm">
+            <a href="${escapeHtml(item.download_link)}" target="_blank" class="btn btn-apple" style="width: 120px;">
                 <i class="bi bi-download me-1"></i>立即下载
             </a>
         </div>`;
@@ -445,7 +479,7 @@ function showFileDetail(id) {
     if (item.tutorial_link) {
         html += `<div class="mb-3">
             <strong>教程链接：</strong><br>
-            <a href="${escapeHtml(item.tutorial_link)}" target="_blank" class="btn btn-outline-primary btn-sm">
+            <a href="${escapeHtml(item.tutorial_link)}" target="_blank" class="btn btn-outline-primary" style="width: 120px;">
                 <i class="bi bi-book me-1"></i>查看教程
             </a>
         </div>`;

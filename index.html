@@ -328,13 +328,17 @@
                 <i class="bi bi-search"></i>
             </div>
             <div id="adminTools" style="display: none;">
-                <button class="btn btn-apple btn-sm me-2" onclick="showCreateModal('folder')">
+                <button class="btn btn-apple btn-sm me-2" onclick="showCreateModal('folder')" id="createFolderBtn">
                     <i class="bi bi-folder-plus me-1"></i>
                     新建文件夹
                 </button>
-                <button class="btn btn-apple btn-sm" onclick="showCreateModal('file')">
+                <button class="btn btn-apple btn-sm me-2" onclick="showCreateModal('file')" id="createFileBtn">
                     <i class="bi bi-file-plus me-1"></i>
                     新建文件
+                </button>
+                <button class="btn btn-outline-secondary btn-sm" onclick="toggleAdminMode()" id="toggleModeBtn">
+                    <i class="bi bi-eye me-1"></i>
+                    切换到游客模式
                 </button>
             </div>
         </div>
